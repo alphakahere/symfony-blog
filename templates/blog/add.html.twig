@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+{% block content %}
+<div
+	class="container">
+	{# {% include "/includes/article-form.html.twig" %}		 #}
+	{{form_start(form)}}
+	<div class="col-12 mb-3">
+		{{ form_widget(form.picture, {'attr': {'class': 'form-control'}}) }}
+	</div>
+	<div class="col-12 mb-3">
+		{{ form_label(form.title) }}
+		{{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Titre de l\'article'}}) }}
+		</div>
+		<div class="col-12 mb-3">
+			 {{ form_label(form.categories) }}
+			{{ form_widget(form.categories, {'attr': {'class': 'form-select'}}) }}
+		</div>
+		<div class="col-12 mb-3">
+			{{ form_widget(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Le contenu de l\'article'}}) }}
+	</div>
+	<div class="col-12 mb-3 form-check">
+		{{ form_widget(form.isPublished, {'attr': {'class': 'form-check-input', 'placeholder': 'Titre de l\'article'}}) }}
+			 {{ form_label(form.isPublished) }}
+		</div>
+		{{form_end(form)}}
+	</div>
+{% endblock %}
