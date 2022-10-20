@@ -13,8 +13,14 @@ class BlogController extends AbstractController
 {
     public function index(): Response
     {
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy(
+            ['isPublished' => true],
+            ['publicationDate' => 'desc']
+        );
+
         return $this->render('blog/index.html.twig', [
             'controller_name' => 'BlogController',
+            'articles' => $articles
         ]);
     }
 
@@ -70,13 +76,13 @@ class BlogController extends AbstractController
             }
             $article->setLastUpdateDate(new \DateTime());
 
-            if($article->getPicture() !== null && $article->getPicture() !== $oldPicture){
+            if ($article->getPicture() !== null && $article->getPicture() !== $oldPicture) {
                 $file = $form->get('picture')->getData();
                 $filename = uniqid().'.'.$file->guessExtension();
 
                 try {
                     $file->move($this->getParameter('images_directory'), $filename);
-                }catch(FileException $e){
+                } catch(FileException $e) {
                     return new Response($e->getMessage());
                 }
 

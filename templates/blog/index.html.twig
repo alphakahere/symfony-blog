@@ -1,16 +1,18 @@
 {% extends "base.html.twig" %}
-{% block title %}Accueil | {{parent()}}
-			{% endblock %}
+{% block title %}Accueil |
+	{{parent()}}
+{% endblock %}
+
 {% block content %}
 	<div class="row">
-		{% for i in 0..11 %}
+		{% for article in articles %}
 			<div class="col-md-4 col-xl-4 mb-4">
 				<div class="card">
-					<img src="https://picsum.photos/40{{i}}" class="card-img-top" alt="card-title" height="300px">
+					<img src="{{asset('uploads/' ~ article.picture)}}" class="card-img-top" alt="{{article.title}}" height="300px">
 					<div class="card-body">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						<a href="/show/article{{i+1}}" class="btn btn-primary">Detail</a>
+						<h5 class="card-title">{{article.title}}</h5>
+						<p class="card-text">{{article.content}}</p>
+						<a href="/show/{{article.id}}" class="btn btn-primary">Detail</a>
 					</div>
 				</div>
 			</div>
