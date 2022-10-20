@@ -28,21 +28,21 @@ class BlogController extends AbstractController
             if ($article->getIsPublished()) {
                 $article->setPublicationDate(new \DateTime());
             }
-            if($article->getPicture() !== null){
-               $file = $form->get('picture')->getData();
-               $filename = uniqid().'.'.$file->guessExtension();
-               try {
-                $file->move($this->getParameter('images_directory'), $filename);
-               } catch(FileException $e) {
-                return new Response($e->getMessage());
-               }
+            if ($article->getPicture() !== null) {
+                $file = $form->get('picture')->getData();
+                $filename = uniqid().'.'.$file->guessExtension();
+                try {
+                    $file->move($this->getParameter('images_directory'), $filename);
+                } catch(FileException $e) {
+                    return new Response($e->getMessage());
+                }
+                $article->setPicture($filename);
             }
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
 
             return new Response('L\'article a bien ete enregistrer');
-
         }
         return    $this->render('/blog/add.html.twig', [
             'form' => $form->createView(),
@@ -57,10 +57,40 @@ class BlogController extends AbstractController
         ]);
     }
 
-    public function edit($id)
+    public function edit(Article $article, Request $request)
     {
+        $oldPicture = $article->getPicture();
+        $form = $this->createForm(ArticleType::class, $article);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($article->getIsPublished()) {
+                $article->setPublicationDate(new \DateTime());
+            }
+            $article->setLastUpdateDate(new \DateTime());
+
+            if($article->getPicture() !== null && $article->getPicture() !== $oldPicture){
+                $file = $form->get('picture')->getData();
+                $filename = uniqid().'.'.$file->guessExtension();
+
+                try {
+                    $file->move($this->getParameter('images_directory'), $filename);
+                }catch(FileException $e){
+                    return new Response($e->getMessage());
+                }
+
+                $article->setPicture($filename);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($article);
+            $em->flush();
+        }
+
         return  $this->render('/blog/edit.html.twig', [
-            'id' => $id
+            'article' => $article,
+            'form' => $form->createView()
         ]);
     }
 

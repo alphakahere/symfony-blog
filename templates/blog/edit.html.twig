@@ -1,7 +1,12 @@
 {% extends "base.html.twig" %}
 {% block content %}
 	<div class="form-container">
-		<h1>Modiler l'article {{id}}</h1>
-			{% include "/includes/article-form.html.twig" %}
+		<h1>Modiler l'article
+			{{article.title}}
+		</h1>
+		{% if article.picture is not null %}
+			<img width="300" src="{{ asset('uploads/' ~ article.picture) }}" class="mb-3">
+		{% endif %}
+		{% include "/includes/article-form.html.twig" %}
 	</div>
 {% endblock %}
